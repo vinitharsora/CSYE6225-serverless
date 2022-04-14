@@ -22,18 +22,34 @@ var table = {
       "TimeToExist" :expirationTime
     }
   }
-  console.log("Adding a new item...");
+  console.log("Adding new item");
 
   //Putting an item to DynamoDB Table
 docClient.put(table, function(err, data) {
     if (err) {
         console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
     } else {
-        console.log("Added item:", JSON.stringify(data, null, 2));
+        console.log("Added:", JSON.stringify(data, null, 2));
     }
 });
+console.log(email + " " +token + "  Parameters set!!");
 
-console.log(email + " " +token + "Parameters set!!");
+const mailbody = `
+<!DOCTYPE html>
+<html>
+    <head>
+    </head>
+    <body>
+      <p>Hi, ${email}</p>
+      <p>Please verify your email</br>
+      <b>Link will be valid only for 5 minutes!!</b></br>
+      Find your link below:</p>
+      <p><a href=http://demo.vinitharsora.me/v1/user/verifyUserEmail?token=${token}&email=${email} >
+        http://demo.vinitharsora.me/v1/user/verifyUserEmail?token=${token}&email=${email} </a> </p>
+        </body></html>
+    </body>
+</html>`;
+
 var params = {
   
   Destination: {
@@ -43,27 +59,17 @@ var params = {
     Body: {
       Html: {
         Charset: "UTF-8",
-        Data:
-        '<html><head>' +
-        '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />' +
-        '<title>' + "test" + '</title>' +  
-        '</head><body>' +
-        'This is the link to update your password. It is valid for five minutes.' +
-        '<br><br>' +
-        "<a href=\"http://" + "demo.vinitharsora.me" + "/v1/user/verifyUserEmail?token=" + token + "&email=" + email + "\">" +
-        "http://" + "demo.vinitharsora.me" + "/v1/user/verifyUserEmail?token=" + token + "&email=" + email + "</a>"
-        +'</body></html>',
+        Data: mailbody,
       },
     }, 
     Subject: {
         Charset: "UTF-8",
-        Data: "CSYE 6225: Verify Email Address",
+        Data: "Email Verification",
       },
     },
     Source: "sender@demo.vinitharsora.me",
   };
-  console.log("Email Send!!");
-  
+  console.log("email sent");
   return ses.sendEmail(params).promise()
   
 };           
