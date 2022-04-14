@@ -5,8 +5,8 @@ name: Building and Deploying Lambda function
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+  # pull_request:
+  #   branches: [main]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -40,4 +40,4 @@ jobs:
            aws s3 cp ./index.zip s3://deploy.serverless.a9/
       - name: Lambda Update
         run: |
-          aws lambda update-function-code --function-name MailingServiceFunction --s3-bucket deploy.serverless.a9 --s3-key index.zip
+          aws lambda update-function-code --function-name emailVerify --s3-bucket deploy.serverless.a9 --s3-key index.zip
